@@ -1,12 +1,10 @@
 import express from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import apiRoute from "./apiRoutes";
+import db from "./mongodb";
 
 dotenv.config();
-
-const mongodbUrl = process.env.MONGODBURL || "";
 
 const app = express();
 
@@ -19,7 +17,7 @@ app.use("/api", apiRoute);
 app.use(express.static("public"));
 
 async function start() {
-  await mongoose.connect(mongodbUrl);
+  await db.connect();
 
   console.log("db connected");
   app.listen(5000, () => console.log("Server started"));

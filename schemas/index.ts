@@ -1,3 +1,5 @@
-import userSchema from "./userSchema";
+import user from "./user";
+import post from "./post";
+import forum from "./forum";
 
-export { userSchema };
+export { user, post, forum };

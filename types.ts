@@ -8,14 +8,12 @@ export interface MyResponse<ResBody> extends Express.Response {
   json: Send<ResBody, this>;
 }
 
-export interface IUser {
-  email: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
+export interface Database<T> {
+  connect(): Promise<T>;
 }
 
 export interface IPost {
+  id: string;
   title: string;
   body: string;
   ownerId: string;

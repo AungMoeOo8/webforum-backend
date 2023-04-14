@@ -1,3 +1,5 @@
-import AuthController from "./authController";
+import AuthController from "./user";
+import PostController from "./post";
+import ForumController from "./forum";
 
-export { AuthController };
+export { AuthController, PostController, ForumController };

@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import { User } from "../models";
-import { IUser, MyRequest, MyResponse } from "../types";
+import { Response } from "express";
+import { MyRequest } from "../types";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import UserModel from "../schemas/user";
 
 const SALTROUNDS = 4;
 const AUTHSECRET = process.env.AUTHSECRET || "verysecuresecret";
@@ -34,7 +34,7 @@ export default class AuthController {
       return;
     }
 
-    let result = await User.findOne({ email });
+    let result = await UserModel.findOne({ email });
 
     if (result) {
       res.status(401).json({
@@ -47,7 +47,11 @@ export default class AuthController {
 
     const hashedPassword = await bcrypt.hash(password, SALTROUNDS);
 
-    result = await User.create({ email, password: hashedPassword });
+    result = await UserModel.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
     if (!result) {
       res.status(401).json({
@@ -60,6 +64,7 @@ export default class AuthController {
 
     const payload = {
       id: result.id,
+      username: result.username,
       email,
     };
 
@@ -99,14 +104,12 @@ export default class AuthController {
       return;
     }
 
-    const result = await User.findOne({ email });
+    const result = await UserModel.findOne({ email });
 
-    if (!result) {
-      res
+    if (!result)
+      return res
         .status(401)
         .json({ success: false, message: "User not found", token: null });
-      return;
-    }
 
     const isPasswordCorrect = await bcrypt.compare(password, result.password);
 
@@ -119,6 +122,7 @@ export default class AuthController {
 
     const payload = {
       id: result.id,
+      username: result.username,
       email,
     };
 
